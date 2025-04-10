@@ -166,6 +166,12 @@ trunk serve
 
 Now go to [http://localhost:8080](http://localhost:8080) and enjoy TUIs in your browser!
 
+> To compile release builds with trunk, add a Trunk.toml in the root of your project with
+> ```toml
+> [build]
+> release = true
+> ```
+
 ## Documentation
 
 - [API Documentation](https://docs.rs/ratzilla)
@@ -180,6 +186,31 @@ Now go to [http://localhost:8080](http://localhost:8080) and enjoy TUIs in your 
 - [Colors RGB](https://github.com/orhun/ratzilla/tree/main/examples/colors_rgb) ([Preview](https://orhun.dev/ratzilla/colors_rgb))
 - [Animations](https://github.com/orhun/ratzilla/tree/main/examples/animations) ([Preview](https://orhun.dev/ratzilla/animations))
 - [World Map](https://github.com/orhun/ratzilla/tree/main/examples/world_map) ([Preview](https://orhun.dev/ratzilla/world_map))
+
+## Deploying Ratzilla
+You can host these websites too! You just have to bundle the wasm before it gets served.
+Here is an example build script:
+```bash
+#!/bin/bash
+set -euo pipefail
+export HOME=/root
+
+# Install Rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -t wasm32-unknown-unknown --profile minimal
+source "$HOME/.cargo/env"
+
+# Install trunk using binstall
+curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+cargo binstall --targets x86_64-unknown-linux-musl -y trunk
+
+# Build project with trunk
+trunk build
+```
+You can then serve the http out of `dist`.
+
+### Deployment Templates
+
+- <https://github.com/jetpham/ratzilla-vercel-template> - Ratzilla Vercel Template
 
 ## Websites built with Ratzilla
 
@@ -205,6 +236,7 @@ Lastly, thanks to [Ratatui] for providing the core TUI components.
 [`Hyperlink`]: https://docs.rs/ratzilla/latest/ratzilla/widgets/struct.Hyperlink.html
 [Webatui]: https://github.com/TylerBloom/webatui
 [Martin Blasko]: https://github.com/MartinBspheroid
+[Vercel]: https://vercel
 
 ## Contributing
 
